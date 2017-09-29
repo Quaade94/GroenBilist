@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         textBT = (TextView) findViewById(R.id.textBT);
 
+
         //Bluetooth
         textBT.setText("Connecting to know devices...");
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();

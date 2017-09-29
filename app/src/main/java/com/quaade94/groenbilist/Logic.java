@@ -16,6 +16,4 @@ public class Logic {
         return instance;
     }
 
-//git virker dhedewdp
-
 }
