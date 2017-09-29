@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         textBT.setText("Connecting to know devices...");
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
-            toast("Sorry, your device does not support Bluetooth!");
+            textBT.setText("Your device does not support bluetooth");
         } else if (!mBluetoothAdapter.isEnabled() && mBluetoothAdapter != null) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             int REQUEST_ENABLE_BT = 1;
