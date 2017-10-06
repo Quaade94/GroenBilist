@@ -1,7 +1,15 @@
 package com.quaade94.groenbilist;
 
+import android.bluetooth.BluetoothDevice;
+
+import com.github.pires.obd.commands.protocol.EchoOffCommand;
+import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
+import com.github.pires.obd.commands.protocol.SelectProtocolCommand;
+import com.github.pires.obd.commands.protocol.TimeoutCommand;
+import com.github.pires.obd.commands.temperature.AmbientAirTemperatureCommand;
+import com.github.pires.obd.enums.ObdProtocols;
+
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.io.OutputStream;
 
 /**
@@ -11,7 +19,6 @@ import java.io.OutputStream;
 public class Logic {
 
     private static Logic instance;
-    protected String cmd = null;
 
     public static Logic getInstance() {
         if (instance == null) {
@@ -21,16 +28,22 @@ public class Logic {
         return instance;
     }
 
-    //send commandoer
 
-    public void sendObdCommand(OutputStream out)throws IOException,InterruptedException{
-        out.write((cmd + "\r").getBytes());
-        out.flush();
+    public void OBD{
+        // retrieve Bluetooth socket
+        socket = ; // specific to the VM you're using (Java, Android, etc.)
+
+// execute commands
+        try {
+            new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
+            new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
+            new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
+            new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
+            new AmbientAirTemperatureCommand().run(socket.getInputStream(), socket.getOutputStream());
+        } catch (Exception e) {
+            // handle errors
+        }
     }
-
-    //Modtag Data her:
-
-    public void recieveData
 
 
 
