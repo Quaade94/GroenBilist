@@ -91,16 +91,6 @@ public class MainActivity extends AppCompatActivity {
         //When BACK BUTTON is pressed, the activity on the stack is restarted
         //Do what you want on the refresh procedure here
     }
-    private void save(){
-        SharedPreferences score = getSharedPreferences("Data", 0);
-        //save data
-        SharedPreferences.Editor editor = score.edit();
-
-        Set<String> set = new HashSet<String>();
-        set.addAll(I.getData());
-        editor.putStringSet("key", set);
-        editor.commit();
-    }
 
     private void load(){
         SharedPreferences score = getSharedPreferences("Data", 0);
