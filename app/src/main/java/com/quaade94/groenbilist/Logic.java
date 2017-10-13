@@ -1,16 +1,7 @@
 package com.quaade94.groenbilist;
 
-import android.bluetooth.BluetoothDevice;
 
-import com.github.pires.obd.commands.protocol.EchoOffCommand;
-import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
-import com.github.pires.obd.commands.protocol.SelectProtocolCommand;
-import com.github.pires.obd.commands.protocol.TimeoutCommand;
-import com.github.pires.obd.commands.temperature.AmbientAirTemperatureCommand;
-import com.github.pires.obd.enums.ObdProtocols;
-
-import java.io.IOException;
-import java.io.OutputStream;
+import java.util.ArrayList;
 
 /**
  * Created by Quaade94 on 27/09/2017.
@@ -19,6 +10,8 @@ import java.io.OutputStream;
 public class Logic {
 
     private static Logic instance;
+    private ArrayList<String> data = new ArrayList<String>();
+
 
     public static Logic getInstance() {
         if (instance == null) {
@@ -27,30 +20,18 @@ public class Logic {
         }
         return instance;
     }
-
-
-    public void OBD{
-        // retrieve Bluetooth socket
-        socket = ; // specific to the VM you're using (Java, Android, etc.)
-
-// execute commands
-        try {
-            new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
-            new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
-            new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
-            new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
-            new AmbientAirTemperatureCommand().run(socket.getInputStream(), socket.getOutputStream());
-        } catch (Exception e) {
-            // handle errors
-        }
+    //returns the data to MainActivity to be stored locally
+    public ArrayList<String> getData() {
+        return data;
     }
 
-
-
-
-    //behandel data her:
-
-
+    //recieves the data from MainActivity to be used
+    public void setData(ArrayList<String> data){
+        if((!data.isEmpty()) && data.size()<this.data.size()){
+            System.out.println("MUST NOT HAPPEN: PROGRESS FROM FILE IS BIGGER THAN PROGRESS FROM CURRENT GAME (GAME OVERWRITTEN!)");
+        }
+        this.data = data;
+    }
 
 
 
