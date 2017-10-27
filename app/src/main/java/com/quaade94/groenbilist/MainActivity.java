@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     AsyncTaskRecieve AR;
     TextView textBT;
     ListView lv;
-    Button b1,b2;
+    Button b1;
     private BluetoothAdapter mBluetoothAdapter;
     private Set<BluetoothDevice> pairedDevices;
     ArrayList list;
