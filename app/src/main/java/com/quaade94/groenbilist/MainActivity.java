@@ -60,19 +60,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void list(View v){
-        pairedDevices = mBluetoothAdapter.getBondedDevices();
+        if(mBluetoothAdapter != null) {
+            pairedDevices = mBluetoothAdapter.getBondedDevices();
 
-        for (BluetoothDevice bt : pairedDevices) list.add(bt.getName());
-        Toast.makeText(getApplicationContext(), "Showing Paired Devices", Toast.LENGTH_SHORT).show();
-        final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
-        lv.setAdapter(adapter);
+            for (BluetoothDevice bt : pairedDevices) list.add(bt.getName());
+            Toast.makeText(getApplicationContext(), "Showing Paired Devices", Toast.LENGTH_SHORT).show();
+            final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
+            lv.setAdapter(adapter);
+        }
     }
 
     public void on(View v) {
         if (mBluetoothAdapter == null) {
             toast("Your device does not support bluetooth!");
         }
-        if (!mBluetoothAdapter.isEnabled() && mBluetoothAdapter != null) {
+        else if (!mBluetoothAdapter.isEnabled() && mBluetoothAdapter != null) {
             textBT.setText("Enable Bluetooth on your device!");
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             int REQUEST_ENABLE_BT = 1;
