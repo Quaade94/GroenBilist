@@ -21,7 +21,6 @@ public class Screen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_screen);
 
     }
@@ -60,6 +59,5 @@ public class Screen extends AppCompatActivity {
         AS.execute();
         //When BACK BUTTON is pressed, the activity on the stack is restarted
         //Do what you want on the refresh procedure here
-    }
-
+        }
     }

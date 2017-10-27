@@ -15,12 +15,26 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp">
 
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="134dp" />
+
         <TextView
             android:id="@+id/textBT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
             android:textSize="14sp" />
 
     </GridLayout>
+
+    <Button
+        android:id="@+id/b1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
 </android.support.constraint.ConstraintLayout>
