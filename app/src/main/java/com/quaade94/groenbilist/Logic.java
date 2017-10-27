@@ -18,12 +18,12 @@ public class Logic {
     private static Logic instance;
     private ArrayList<String> data = new ArrayList<String>();
 
-    private int SOC;
-    private int velocity;
-    private int ACLevel;
-    private boolean Headlights;
-    private boolean throttle;
-    private boolean brake;
+    private int SOC = 99;
+    private int velocity = 80;
+    private int ACLevel = 2;
+    private boolean Headlights = true;
+    private int throttle = 50;
+    private boolean brake =  false;
 
 
     public static Logic getInstance() {
@@ -55,9 +55,9 @@ public class Logic {
         Calendar cal = Calendar.getInstance();
         Date date = new Date();
         cal.setTime(date);
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-        int minutes = cal.get(Calendar.MINUTE);
-        if (hour == 07 && minutes >= 00 || hour == 19 && minutes <= 00) {
+        int hour = cal.get(Calendar.HOUR_OF_DAY)+2;
+        System.out.println("Current time is now: " + hour);
+        if (hour >= 07  && hour <= 19 ) {
             if(Headlights){
                 return false;
             }
@@ -65,6 +65,14 @@ public class Logic {
         }else{
             return true;
         }
+    }
+
+    public int getACLevel(){
+        return ACLevel;
+    }
+
+    public int getVelocity(){
+        return velocity;
     }
 
 

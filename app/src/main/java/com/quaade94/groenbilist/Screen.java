@@ -36,48 +36,81 @@ public class Screen extends AppCompatActivity {
         textView4 = (TextView) findViewById(R.id.textView4) ;
 
 
-        if(started) {
-            //BATTERY
-            textView.setText("Battery: " + I.getSOC());
-            if (I.getSOC() >= 60) textView.setBackgroundColor(Color.GREEN);
-            if (I.getSOC() < 60 && I.getSOC() >= 30) textView.setBackgroundColor(Color.YELLOW);
-            if (I.getSOC() < 30) textView.setBackgroundColor(Color.RED);
-
-            //LIGHTS
-            if(!I.getRecommendedLights()){
-                textView2.setText("Turn off your headlights!");
-                textView2.setBackgroundColor(Color.RED);
-            }else{
-                textView2.setText("Headlights are Off");
-                textView2.setBackgroundColor(Color.GREEN);
-            }
-            //A/C
-
-
-            //KONSTANT ACCELERATION
 
 
 
 
-        }
+
+
+
 
                 startb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Animator.didTapButton(view, startb);
-                if(started) {
-                    started = false;
+                System.out.println("Boolean started = "+started);
+                if(started == true) {
                     startb.setBackgroundColor(Color.GREEN);
                     startb.setText("START");
-                }
-                if(!started){
-                    started = true;
+                    started = false;
+                } else if(started == false){
                     startb.setBackgroundColor(Color.RED);
                     startb.setText("STOP");
+                    started = true;
+                    run();
                 }
             }
         });
 
+
+    }
+
+    private void run(){
+        //BATTERY
+        textView.setText("Battery: " + I.getSOC() + " %");
+        if (I.getSOC() >= 60){
+            textView.setBackgroundColor(Color.GREEN);
+        } else if (I.getSOC() < 60 && I.getSOC() >= 30){
+            textView.setBackgroundColor(Color.YELLOW);
+        } else {
+            textView.setBackgroundColor(Color.RED);
+        }
+
+        //LIGHTS
+        if(!I.getRecommendedLights()){
+            textView2.setText("Turn off your headlights!");
+            textView2.setBackgroundColor(Color.RED);
+        }else{
+            textView2.setText("Headlights: Off");
+            textView2.setBackgroundColor(Color.GREEN);
+        }
+        //A/C
+        int AC = I.getACLevel();
+        if(AC<1){
+            textView3.setText("Aircondtion: OFF");
+            textView3.setBackgroundColor(Color.GREEN);
+        }else if(AC>0 && AC<4){
+            textView3.setText("Aircondtion: ON");
+            textView3.setBackgroundColor(Color.YELLOW);
+        }else{
+            textView3.setText("Aircondition is MAX!");
+            textView3.setBackgroundColor(Color.RED);
+        }
+
+        //HASTIGHED
+        int spd = I.getVelocity();
+        if(spd>90){
+            textView4.setText("Speed: " + spd + " km/h");
+            textView4.setBackgroundColor(Color.RED);
+        }else if(spd<=90 && spd>60){
+            textView4.setText("Speed: " + spd + " km/h");
+            textView4.setBackgroundColor(Color.YELLOW);
+        }else if(spd<=60){
+            textView4.setText("Speed: " + spd + " km/h");
+            textView4.setBackgroundColor(Color.GREEN);
+        }
+
+        //KONSTANT ACCELERATION
 
     }
 

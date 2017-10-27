@@ -52,8 +52,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Animator.didTapButton(view, b1);
-                on(view);
-                list(view);
+                //on(view);
+                //list(view);
+                startActivity(new Intent(getApplicationContext(), Screen.class));
+
             }
         });
 
