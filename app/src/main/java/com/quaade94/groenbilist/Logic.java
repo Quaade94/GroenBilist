@@ -19,8 +19,8 @@ public class Logic {
     private ArrayList<String> data = new ArrayList<String>();
 
     private int SOC = 99;
-    private int velocity = 80;
-    private int ACLevel = 2;
+    private int velocity = 120;
+    private int ACLevel = 0;
     private boolean Headlights = true;
     private int throttle = 50;
     private boolean brake =  false;
@@ -55,13 +55,14 @@ public class Logic {
         Calendar cal = Calendar.getInstance();
         Date date = new Date();
         cal.setTime(date);
-        int hour = cal.get(Calendar.HOUR_OF_DAY)+2;
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
         System.out.println("Current time is now: " + hour);
         if (hour >= 07  && hour <= 19 ) {
             if(Headlights){
                 return false;
+            }else{
+                return true;
             }
-            return true;
         }else{
             return true;
         }
