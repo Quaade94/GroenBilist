@@ -9,7 +9,7 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.31"
         android:gravity="top|center_horizontal"
         android:textSize="30sp" />
 
@@ -17,7 +17,7 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.34"
         android:gravity="top|center_horizontal"
         android:textSize="30sp" />
 
@@ -25,7 +25,7 @@
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.37"
         android:gravity="top|center_horizontal"
         android:textSize="30sp" />
 
@@ -33,7 +33,15 @@
         android:id="@+id/textView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.39"
+        android:gravity="top|center_horizontal"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.31"
         android:gravity="top|center_horizontal"
         android:textSize="30sp" />
 
@@ -42,12 +50,13 @@
         android:layout_height="0dip"
         android:layout_weight="1"
         android:gravity="center|bottom"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:weightSum="1">
 
     <Button
         android:id="@+id/startb"
-        android:layout_width="181dp"
-        android:layout_height="wrap_content"
+        android:layout_width="210dp"
+        android:layout_height="58dp"
         android:background="@android:color/holo_green_dark"
         android:text="Start Trip" />
 

@@ -36,14 +36,6 @@ public class Screen extends AppCompatActivity {
         textView4 = (TextView) findViewById(R.id.textView4) ;
 
 
-
-
-
-
-
-
-
-
                 startb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,6 +45,15 @@ public class Screen extends AppCompatActivity {
                     startb.setBackgroundColor(Color.GREEN);
                     startb.setText("START");
                     started = false;
+                    textView.setBackgroundColor(Color.WHITE);
+                    textView2.setBackgroundColor(Color.WHITE);
+                    textView3.setBackgroundColor(Color.WHITE);
+                    textView4.setBackgroundColor(Color.WHITE);
+
+                    textView.setText("");
+                    textView2.setText("");
+                    textView3.setText("");
+                    textView4.setText("");
                 } else if(started == false){
                     startb.setBackgroundColor(Color.RED);
                     startb.setText("STOP");

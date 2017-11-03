@@ -18,11 +18,11 @@ public class Logic {
     private static Logic instance;
     private ArrayList<String> data = new ArrayList<String>();
 
-    private int SOC = 99;
-    private int velocity = 120;
-    private int ACLevel = 0;
-    private boolean Headlights = true;
-    private int throttle = 50;
+    private int SOC = -1;
+    private int velocity = -1;
+    private int ACLevel = -1;
+    private boolean Headlights = false;
+    private int throttle = -1;
     private boolean brake =  false;
 
 
@@ -75,6 +75,20 @@ public class Logic {
     public int getVelocity(){
         return velocity;
     }
+
+    public void setACLevel(int input) {
+        this.ACLevel = input;
+    };
+    public void setSOC(int input) {
+        this.SOC = input;
+    };
+    public void setVelocity(int input) {
+        this.velocity = input;
+    };
+    public void setHeadlights(boolean input) {
+        this.Headlights = input;
+    };
+
 
 
 
