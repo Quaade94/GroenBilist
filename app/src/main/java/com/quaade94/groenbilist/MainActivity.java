@@ -3,11 +3,14 @@ package com.quaade94.groenbilist;
 import android.app.ListActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,9 +19,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter mBluetoothAdapter;
     private Set<BluetoothDevice> pairedDevices;
     ArrayList list;
+    private BluetoothDevice dev = null;
+    private BluetoothSocket sock = null;
+    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    private boolean connected = false;
 
 
     @Override
@@ -52,9 +63,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Animator.didTapButton(view, b1);
-                //on(view);
-                //list(view);
-                startActivity(new Intent(getApplicationContext(), Screen.class));
+                on(view);
+                list(view);
+                if(connected) {
+                    startActivity(new Intent(getApplicationContext(), Screen.class));
+                }
 
             }
         });
@@ -69,7 +82,53 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Showing Paired Devices", Toast.LENGTH_SHORT).show();
             final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
             lv.setAdapter(adapter);
+            startConnection();
+
+
         }
+    }
+
+    private void startConnection() {
+        try {
+            sock = connect(dev);
+            connected = true;
+        } catch (Exception e2) {
+            stopService();
+            e2.printStackTrace();
+        }
+    }
+
+    private void stopService() {
+        if (sock != null)
+            // close socket
+            try {
+                sock.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+
+    public static BluetoothSocket connect(BluetoothDevice dev) throws IOException {
+        BluetoothSocket sock = null;
+        BluetoothSocket sockFallback = null;
+
+        try {
+            sock = dev.createRfcommSocketToServiceRecord(MY_UUID);
+            sock.connect();
+        } catch (Exception e1) {
+            Class<?> clazz = sock.getRemoteDevice().getClass();
+            Class<?>[] paramTypes = new Class<?>[]{Integer.TYPE};
+            try {
+                Method m = clazz.getMethod("createRfcommSocket", paramTypes);
+                Object[] params = new Object[]{Integer.valueOf(1)};
+                sockFallback = (BluetoothSocket) m.invoke(sock.getRemoteDevice(), params);
+                sockFallback.connect();
+                sock = sockFallback;
+            } catch (Exception e2) {
+                throw new IOException(e2.getMessage());
+            }
+        }
+        return sock;
     }
 
     public void on(View v) {
