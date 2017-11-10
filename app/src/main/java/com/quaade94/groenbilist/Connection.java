@@ -19,7 +19,6 @@ package com.quaade94.groenbilist;
 
 public class Connection {
 
-
         protected ArrayList<Integer> buffer = null;
         protected String cmd = null;
         protected boolean useImperialUnits = false;
@@ -28,9 +27,7 @@ public class Connection {
         private long start;
         private long end;
 
-
         Logic I = Logic.getInstance();
-
 
         public void data(){
 
@@ -40,7 +37,6 @@ public class Connection {
 
 
         }
-
 
         public void run(InputStream in, OutputStream out) throws IOException,
                 InterruptedException {
@@ -76,7 +72,6 @@ public class Connection {
             readRawData(in);
             fillBuffer();
         }
-
 
         private static Pattern WHITESPACE_PATTERN = Pattern.compile("\\s");
         private static Pattern BUSINIT_PATTERN = Pattern.compile("(BUS INIT)|(BUSINIT)|(\\.)");
@@ -151,126 +146,6 @@ public class Connection {
                 }
             }
             */
-
-        }
-
-        /**
-         * <p>getResult.</p>
-         *
-         * @return the raw command response in string representation.
-         */
-        public String getResult() {
-            return rawData;
-        }
-
-        /**
-         * <p>Getter for the field <code>buffer</code>.</p>
-         *
-         * @return a list of integers
-         */
-        protected ArrayList<Integer> getBuffer() {
-            return buffer;
-        }
-
-        /**
-         * <p>useImperialUnits.</p>
-         *
-         * @return true if imperial units are used, or false otherwise
-         */
-        public boolean useImperialUnits() {
-            return useImperialUnits;
-        }
-
-        public String getResultUnit() {
-            return "";//no unit by default
-        }
-
-        /**
-         * Set to 'true' if you want to use imperial units, false otherwise. By
-         * default this value is set to 'false'.
-         *
-         * @param isImperial a boolean.
-         */
-        public void useImperialUnits(boolean isImperial) {
-            this.useImperialUnits = isImperial;
-        }
-
-        /**
-         * Time the command waits before returning from #sendCommand()
-         *
-         * @return delay in ms (may be null)
-         */
-        public Long getResponseTimeDelay() {
-            return responseDelayInMs;
-        }
-
-        /**
-         * Time the command waits before returning from #sendCommand()
-         *
-         * @param responseDelayInMs a Long (can be null)
-         */
-        public void setResponseTimeDelay(Long responseDelayInMs) {
-            this.responseDelayInMs = responseDelayInMs;
-        }
-
-        //fixme resultunit
-        /**
-         * <p>Getter for the field <code>start</code>.</p>
-         *
-         * @return a long.
-         */
-        public long getStart() {
-            return start;
-        }
-
-        /**
-         * <p>Setter for the field <code>start</code>.</p>
-         *
-         * @param start a long.
-         */
-        public void setStart(long start) {
-            this.start = start;
-        }
-
-        /**
-         * <p>Getter for the field <code>end</code>.</p>
-         *
-         * @return a long.
-         */
-        public long getEnd() {
-            return end;
-        }
-
-        /**
-         * <p>Setter for the field <code>end</code>.</p>
-         *
-         * @param end a long.
-         */
-        public void setEnd(long end) {
-            this.end = end;
-        }
-
-        /**
-         * <p>getCommandPID.</p>
-         *
-         * @return a {@link java.lang.String} object.
-         * @since 1.0-RC12
-         */
-        public final String getCommandPID() {
-            return cmd.substring(3);
-        }
-
-        /**
-         * <p>getCommandMode.</p>
-         *
-         * @return a {@link java.lang.String} object.
-         */
-        public final String getCommandMode() {
-            if (cmd.length() >= 2) {
-                return cmd.substring(0, 2);
-            } else {
-                return cmd;
-            }
         }
 
         @Override
@@ -287,6 +162,4 @@ public class Connection {
         public int hashCode() {
             return cmd != null ? cmd.hashCode() : 0;
         }
-
-
 }
