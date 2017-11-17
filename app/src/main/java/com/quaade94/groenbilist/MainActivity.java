@@ -1,9 +1,7 @@
 package com.quaade94.groenbilist;
 
-import android.app.ListActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,10 +17,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.pires.obd.commands.protocol.EchoOffCommand;
+import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
+import com.github.pires.obd.commands.protocol.SelectProtocolCommand;
+import com.github.pires.obd.commands.protocol.TimeoutCommand;
+import com.github.pires.obd.commands.temperature.AmbientAirTemperatureCommand;
+import com.github.pires.obd.enums.ObdProtocols;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -38,9 +43,12 @@ public class MainActivity extends AppCompatActivity {
     private Set<BluetoothDevice> pairedDevices;
     ArrayList list;
     private BluetoothDevice dev = null;
-    private BluetoothSocket sock = null;
+    private BluetoothSocket socket = null;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private boolean connected = false;
+    ArrayAdapter adapter;
+
+
 
 
     @Override
@@ -53,7 +61,9 @@ public class MainActivity extends AppCompatActivity {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         AR = new AsyncTaskRecieve();
         AR.execute();
-        list = new ArrayList();
+
+
+
 
 
         textBT.setText("");
@@ -68,7 +78,17 @@ public class MainActivity extends AppCompatActivity {
                 if(connected) {
                     startActivity(new Intent(getApplicationContext(), Screen.class));
                 }
-
+            }
+        });
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                HashMap<String, Object> obj = (HashMap<String, Object>) adapter.getItem(position);
+                String name = (String) obj.get("name");
+                Log.d("Yourtag", name);
+                System.out.println("name: " + name);
+                //check that item is a
+                startConnection();
+                commands();
             }
         });
 
@@ -77,20 +97,29 @@ public class MainActivity extends AppCompatActivity {
     public void list(View v){
         if(mBluetoothAdapter != null) {
             pairedDevices = mBluetoothAdapter.getBondedDevices();
-
+            list = new ArrayList();
             for (BluetoothDevice bt : pairedDevices) list.add(bt.getName());
+            adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
             Toast.makeText(getApplicationContext(), "Showing Paired Devices", Toast.LENGTH_SHORT).show();
-            final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
             lv.setAdapter(adapter);
-            startConnection();
+        }
+    }
 
-
+    private void commands(){
+        try {
+            new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
+            new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
+            new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
+            new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
+            new AmbientAirTemperatureCommand().run(socket.getInputStream(), socket.getOutputStream());
+        } catch (Exception e) {
+            // handle errors
         }
     }
 
     private void startConnection() {
         try {
-            sock = connect(dev);
+            socket = connect(dev);
             connected = true;
         } catch (Exception e2) {
             stopService();
@@ -99,10 +128,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void stopService() {
-        if (sock != null)
+        if (socket != null)
             // close socket
             try {
-                sock.close();
+                socket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
