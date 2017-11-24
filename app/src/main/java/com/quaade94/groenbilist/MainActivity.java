@@ -37,11 +37,10 @@ public class MainActivity extends AppCompatActivity {
     Logic I = Logic.getInstance();
     AsyncTaskRecieve AR;
     TextView textBT;
-    ListView lv;
     Button b1;
     private BluetoothAdapter mBluetoothAdapter;
     private Set<BluetoothDevice> pairedDevices;
-    ArrayList list;
+    ArrayList list, adress;
     private BluetoothDevice dev = null;
     private BluetoothSocket socket = null;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -51,20 +50,17 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textBT = (TextView) findViewById(R.id.textBT);
-        lv = (ListView) findViewById(R.id.listView);
         b1 = (Button) findViewById(R.id.b1);
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         AR = new AsyncTaskRecieve();
         AR.execute();
-
-
-
-
+        final ListView lv = (ListView) findViewById(R.id.listView);
 
         textBT.setText("");
         b1.setText("Connect");
@@ -75,20 +71,22 @@ public class MainActivity extends AppCompatActivity {
                 Animator.didTapButton(view, b1);
                 on(view);
                 list(view);
+                lv.setAdapter(adapter);
                 if(connected) {
                     startActivity(new Intent(getApplicationContext(), Screen.class));
                 }
             }
         });
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HashMap<String, Object> obj = (HashMap<String, Object>) adapter.getItem(position);
-                String name = (String) obj.get("name");
-                Log.d("Yourtag", name);
-                System.out.println("name: " + name);
-                //check that item is a
+            public void onItemClick(AdapterView<?> myAdapter, View myView, int myItemInt, long mylng) {
+                String selectedFromList =(String) (adress.get(myItemInt));
+                System.out.println("Selected device: " + selectedFromList);
+                dev = mBluetoothAdapter.getRemoteDevice(selectedFromList);
                 startConnection();
-                commands();
+                //commands();
+                if(connected) {
+                    startActivity(new Intent(getApplicationContext(), Screen.class));
+                }
             }
         });
 
@@ -98,15 +96,19 @@ public class MainActivity extends AppCompatActivity {
         if(mBluetoothAdapter != null) {
             pairedDevices = mBluetoothAdapter.getBondedDevices();
             list = new ArrayList();
-            for (BluetoothDevice bt : pairedDevices) list.add(bt.getName());
+            adress = new ArrayList();
+            for (BluetoothDevice bt : pairedDevices){
+                list.add(bt.getName()+"\n"+bt.getAddress());
+                adress.add(bt.getAddress());
+            }
             adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
             Toast.makeText(getApplicationContext(), "Showing Paired Devices", Toast.LENGTH_SHORT).show();
-            lv.setAdapter(adapter);
         }
     }
 
     private void commands(){
         try {
+            System.out.println("Trying to send commands");
             new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
             new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
             new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
@@ -119,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void startConnection() {
         try {
+            System.out.println("Trying to start the connection");
             socket = connect(dev);
             connected = true;
         } catch (Exception e2) {
@@ -131,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
         if (socket != null)
             // close socket
             try {
+                System.out.println("Trying to close the socket");
                 socket.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -142,7 +146,9 @@ public class MainActivity extends AppCompatActivity {
         BluetoothSocket sockFallback = null;
 
         try {
+            System.out.println("Trying to connect in connect method");
             sock = dev.createRfcommSocketToServiceRecord(MY_UUID);
+            System.out.println("Sock: "+sock + MY_UUID);
             sock.connect();
         } catch (Exception e1) {
             Class<?> clazz = sock.getRemoteDevice().getClass();

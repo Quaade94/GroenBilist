@@ -35,6 +35,17 @@ public class Connection {
             this.buffer = new ArrayList<>();
             I.setACLevel(Integer.parseInt(rawData));
 
+            this.cmd = "";
+            this.buffer = new ArrayList<>();
+            I.setSOC(Integer.parseInt(rawData));
+
+            this.cmd = "";
+            this.buffer = new ArrayList<>();
+            //I.setHeadlights(rawData);
+
+            this.cmd = "";
+            this.buffer = new ArrayList<>();
+            I.setVelocity(Integer.parseInt(rawData));
 
         }
 
