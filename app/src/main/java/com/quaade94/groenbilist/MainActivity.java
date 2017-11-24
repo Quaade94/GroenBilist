@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
             new AmbientAirTemperatureCommand().run(socket.getInputStream(), socket.getOutputStream());
         } catch (Exception e) {
             e.printStackTrace();
-            // handle errors
+            // handle error
         }
     }
 
