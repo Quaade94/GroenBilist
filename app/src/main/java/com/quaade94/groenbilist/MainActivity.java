@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,7 +26,6 @@ import com.github.pires.obd.enums.ObdProtocols;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -35,6 +33,7 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
 
     Logic I = Logic.getInstance();
+    Connection C = Connection.getInstance();
     AsyncTaskRecieve AR;
     TextView textBT;
     Button b1;
@@ -46,10 +45,6 @@ public class MainActivity extends AppCompatActivity {
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private boolean connected = false;
     ArrayAdapter adapter;
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,19 +72,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> myAdapter, View myView, int myItemInt, long mylng) {
                 String selectedFromList =(String) (adress.get(myItemInt));
                 System.out.println("Selected device: " + selectedFromList);
                 dev = mBluetoothAdapter.getRemoteDevice(selectedFromList);
                 startConnection();
-                //commands();
+                commands();
                 if(connected) {
                     startActivity(new Intent(getApplicationContext(), Screen.class));
                 }
             }
         });
-
     }
 
     public void list(View v){
@@ -112,9 +107,10 @@ public class MainActivity extends AppCompatActivity {
             new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
             new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
             new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
-            new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
+            new SelectProtocolCommand(ObdProtocols.ISO_15765_4_CAN).run(socket.getInputStream(), socket.getOutputStream());
             new AmbientAirTemperatureCommand().run(socket.getInputStream(), socket.getOutputStream());
         } catch (Exception e) {
+            e.printStackTrace();
             // handle errors
         }
     }
@@ -218,8 +214,5 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Data recieved");
             updateView();
         }
-
     }
-
-
 }

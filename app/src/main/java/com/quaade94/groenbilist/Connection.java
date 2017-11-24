@@ -18,6 +18,16 @@ package com.quaade94.groenbilist;
         import java.util.regex.Pattern;
 
 public class Connection {
+    private static Connection instance2;
+
+
+    public static Connection getInstance() {
+        if (instance2 == null) {
+            instance2 = new Connection();
+            System.out.println("Connection.instance var NULL - frisk start! Opretter en instance");
+        }
+        return instance2;
+    }
 
         protected ArrayList<Integer> buffer = null;
         protected String cmd = null;
@@ -31,10 +41,10 @@ public class Connection {
 
         public void data(){
 
-            this.cmd = "";
+            this.cmd = "ATZ";
             this.buffer = new ArrayList<>();
             I.setACLevel(Integer.parseInt(rawData));
-
+/*
             this.cmd = "";
             this.buffer = new ArrayList<>();
             I.setSOC(Integer.parseInt(rawData));
@@ -46,7 +56,7 @@ public class Connection {
             this.cmd = "";
             this.buffer = new ArrayList<>();
             I.setVelocity(Integer.parseInt(rawData));
-
+*/
         }
 
         public void run(InputStream in, OutputStream out) throws IOException,
