@@ -41,7 +41,7 @@ public class Connection {
 
         public void data(){
 
-            this.cmd = "ATZ";
+            this.cmd = "412";
             this.buffer = new ArrayList<>();
             I.setACLevel(Integer.parseInt(rawData));
 /*

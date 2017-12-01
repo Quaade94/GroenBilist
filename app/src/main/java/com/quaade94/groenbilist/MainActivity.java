@@ -33,7 +33,6 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
 
     Logic I = Logic.getInstance();
-    Connection C = Connection.getInstance();
     AsyncTaskRecieve AR;
     TextView textBT;
     Button b1;
@@ -109,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
             new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
             new SelectProtocolCommand(ObdProtocols.ISO_15765_4_CAN).run(socket.getInputStream(), socket.getOutputStream());
             new AmbientAirTemperatureCommand().run(socket.getInputStream(), socket.getOutputStream());
+            System.out.println(socket.getInputStream().read());
         } catch (Exception e) {
             e.printStackTrace();
             // handle error
