@@ -133,9 +133,13 @@ public class Connection {
             // read until '>' arrives OR end of stream reached
             char c;
             // -1 if the end of the stream is reached
+
+           int count = 0;
+
             while (((b = (byte) in.read()) > -1)) {
+                count++;
                 c = (char) b;
-                if (c == '>') // read until '>' arrives
+                if (count == 24) // read until '>' arrives
                 {
                     break;
                 }

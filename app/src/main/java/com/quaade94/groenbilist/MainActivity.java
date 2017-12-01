@@ -16,11 +16,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.pires.obd.commands.control.VinCommand;
 import com.github.pires.obd.commands.protocol.EchoOffCommand;
-import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
+import com.github.pires.obd.commands.protocol.HeadersOffCommand;
+import com.github.pires.obd.commands.protocol.NoDataError;
+import com.github.pires.obd.commands.protocol.ObdResetCommand;
+import com.github.pires.obd.commands.protocol.ReadAllWithThisPidAddress;
 import com.github.pires.obd.commands.protocol.SelectProtocolCommand;
-import com.github.pires.obd.commands.protocol.TimeoutCommand;
-import com.github.pires.obd.commands.temperature.AmbientAirTemperatureCommand;
+import com.github.pires.obd.commands.protocol.SpacesOffCommand;
 import com.github.pires.obd.enums.ObdProtocols;
 
 import java.io.IOException;
@@ -66,9 +69,6 @@ public class MainActivity extends AppCompatActivity {
                 on(view);
                 list(view);
                 lv.setAdapter(adapter);
-                if(connected) {
-                    startActivity(new Intent(getApplicationContext(), Screen.class));
-                }
             }
         });
 
@@ -77,11 +77,11 @@ public class MainActivity extends AppCompatActivity {
                 String selectedFromList =(String) (adress.get(myItemInt));
                 System.out.println("Selected device: " + selectedFromList);
                 dev = mBluetoothAdapter.getRemoteDevice(selectedFromList);
-                startConnection();
-                commands();
                 if(connected) {
                     startActivity(new Intent(getApplicationContext(), Screen.class));
                 }
+                startConnection();
+                commands();
             }
         });
     }
@@ -103,12 +103,58 @@ public class MainActivity extends AppCompatActivity {
     private void commands(){
         try {
             System.out.println("Trying to send commands");
-            new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
-            new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
-            new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
-            new SelectProtocolCommand(ObdProtocols.ISO_15765_4_CAN).run(socket.getInputStream(), socket.getOutputStream());
-            new AmbientAirTemperatureCommand().run(socket.getInputStream(), socket.getOutputStream());
-            System.out.println(socket.getInputStream().read());
+
+            ObdResetCommand or = new ObdResetCommand();
+            or.run(socket.getInputStream(),socket.getOutputStream());
+            String result1 = or.getFormattedResult();
+            System.out.println(result1);
+            Thread.sleep(200);
+
+            SelectProtocolCommand spc = new SelectProtocolCommand(ObdProtocols.ISO_15765_4_CAN);
+            spc.run(socket.getInputStream(), socket.getOutputStream());
+            String result2 = spc.getFormattedResult();
+            System.out.println(result2);
+            Thread.sleep(200);
+
+            EchoOffCommand ecc = new EchoOffCommand();
+            ecc.run(socket.getInputStream(), socket.getOutputStream());
+            String result3 = ecc.getFormattedResult();
+            System.out.println(result3);
+            Thread.sleep(200);
+            //new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
+            //new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
+            HeadersOffCommand hoc = new HeadersOffCommand();
+            hoc.run(socket.getInputStream(),socket.getOutputStream());
+            String result4 = hoc.getFormattedResult();
+            System.out.println(result4);
+            Thread.sleep(200);
+
+            VinCommand vc = new VinCommand();
+            vc.run(socket.getInputStream(), socket.getOutputStream());
+            String result5 = vc.getFormattedResult();
+            System.out.println(result5);
+            Thread.sleep(200);
+
+            NoDataError nda = new NoDataError();
+            nda.run(socket.getInputStream(),socket.getOutputStream());
+            String result6 = nda.getFormattedResult();
+            System.out.println(result6);
+            Thread.sleep(200);
+
+            SpacesOffCommand soc = new SpacesOffCommand();
+            soc.run(socket.getInputStream(),socket.getOutputStream());
+            String result7 = soc.getFormattedResult();
+            System.out.println(result7);
+            Thread.sleep(200);
+
+            ReadAllWithThisPidAddress rawtpa = new ReadAllWithThisPidAddress();
+            rawtpa.run(socket.getInputStream(),socket.getOutputStream());
+            String result8 = rawtpa.getFormattedResult();
+            System.out.println(result8);
+            Thread.sleep(200);
+
+            System.out.println(rawtpa.getResult());
+
         } catch (Exception e) {
             e.printStackTrace();
             // handle error
