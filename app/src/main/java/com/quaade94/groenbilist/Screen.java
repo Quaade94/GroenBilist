@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +25,7 @@ public class Screen extends AppCompatActivity {
     AsyncTaskSave AS;
     Button startb;
     TextView textView,textView4,textView2,textView3;
-    private boolean started;
+    private boolean started = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,8 @@ public class Screen extends AppCompatActivity {
         textView2 = (TextView) findViewById(R.id.textView2) ;
         textView3 = (TextView) findViewById(R.id.textView3) ;
         textView4 = (TextView) findViewById(R.id.textView4) ;
-
+        startb.setBackgroundColor(Color.GREEN);
+        startb.setText("START");
 
                 startb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,16 +58,37 @@ public class Screen extends AppCompatActivity {
                     textView3.setText("");
                     textView4.setText("");
                 } else if(started == false){
-                    startb.setBackgroundColor(Color.RED);
-                    startb.setText("STOP");
                     started = true;
-                    run();
+
+                    startb.setText("Working");
+                    class AsyncTask1 extends AsyncTask {
+                        @Override
+                        protected Object doInBackground(Object... arg0) {
+                            try {
+                                Thread.sleep(1000);
+                                I.start();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Object result) {
+                            run();
+                            startb.setBackgroundColor(Color.RED);
+                            startb.setText("STOP");
+
+                        }
+                    }
+                    AsyncTask1 a1 = new AsyncTask1();
+                    a1.execute();
                 }
             }
         });
 
-
     }
+
 
     private void run(){
         //BATTERY
@@ -150,4 +174,16 @@ public class Screen extends AppCompatActivity {
         //When BACK BUTTON is pressed, the activity on the stack is restarted
         //Do what you want on the refresh procedure here
         }
+
+    protected void onDestroy(){
+        super.onDestroy();
+
+            try {
+                I.closeSocket();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        finish();
+    }
     }
